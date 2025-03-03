@@ -25,31 +25,38 @@ public class Main {
 //            System.out.println("Entreprise not found.");
 //        }
 
-        // Exo3
-        // Retrieve all entreprises
-        List<Entreprise> entreprises = getAllEntreprises();
-        System.out.println("All Entreprises:");
-        for (Entreprise e : entreprises) {
-            System.out.println(e.getNomEnt());
-        }
+//        // Exo3
+//        // Retrieve all entreprises
+//        List<Entreprise> entreprises = getAllEntreprises();
+//        System.out.println("All Entreprises:");
+//        for (Entreprise e : entreprises) {
+//            System.out.println(e.getNomEnt());
+//        }
+//
+//        // Retrieve entreprises by name
+//        List<Entreprise> entreprisesByName = getEntrepriseByName("Tech Corp");
+//        System.out.println("Entreprises with name 'Tech Corp':");
+//        for (Entreprise e : entreprisesByName) {
+//            System.out.println(e.getNomEnt());
+//        }
+//
+//        // Retrieve all entreprises sorted by number of employees
+//        List<Entreprise> entreprisesSorted = getAllEntreprisesSortedByEmployees();
+//        System.out.println("Entreprises sorted by number of employees:");
+//        for (Entreprise e : entreprisesSorted) {
+//            System.out.println(e.getNomEnt() + " - " + e.getNbEmployee());
+//        }
+//
+//        // Count the number of entreprises
+//        long count = getEntrepriseCount();
+//        System.out.println("Number of entreprises: " + count);
+//
 
-        // Retrieve entreprises by name
-        List<Entreprise> entreprisesByName = getEntrepriseByName("Tech Corp");
-        System.out.println("Entreprises with name 'Tech Corp':");
-        for (Entreprise e : entreprisesByName) {
-            System.out.println(e.getNomEnt());
-        }
+        // Update an Entreprise's name
+        updateEntrepriseName(1, " Tech Corp 2");
 
-        // Retrieve all entreprises sorted by number of employees
-        List<Entreprise> entreprisesSorted = getAllEntreprisesSortedByEmployees();
-        System.out.println("Entreprises sorted by number of employees:");
-        for (Entreprise e : entreprisesSorted) {
-            System.out.println(e.getNomEnt() + " - " + e.getNbEmployee());
-        }
-
-        // Count the number of entreprises
-        long count = getEntrepriseCount();
-        System.out.println("Number of entreprises: " + count);
+        // Delete an Entreprise
+        deleteEntreprise(2);
 
         // Close the SessionFactory
         factory.close();
@@ -203,6 +210,61 @@ public class Main {
             session.getTransaction().commit();
 
             return count;
+        } finally {
+            factory.close();
+        }
+    }
+
+    //Exercise 4
+
+    // update function
+    public static void updateEntrepriseName(int id, String newName) {
+        SessionFactory factory = new Configuration()
+                .configure("hibernate.cfg.xml")
+                .addAnnotatedClass(Entreprise.class)
+                .buildSessionFactory();
+
+        Session session = factory.getCurrentSession();
+
+        try {
+            session.beginTransaction();
+
+            // Retrieve the Entreprise by ID
+            Entreprise entreprise = session.get(Entreprise.class, id);
+
+            // Update the name
+            if (entreprise != null) {
+                entreprise.setNomEnt(newName);
+                session.update(entreprise);
+            }
+
+            session.getTransaction().commit();
+        } finally {
+            factory.close();
+        }
+    }
+
+    // delete by id
+    public static void deleteEntreprise(int id) {
+        SessionFactory factory = new Configuration()
+                .configure("hibernate.cfg.xml")
+                .addAnnotatedClass(Entreprise.class)
+                .buildSessionFactory();
+
+        Session session = factory.getCurrentSession();
+
+        try {
+            session.beginTransaction();
+
+            // Retrieve the Entreprise by ID
+            Entreprise entreprise = session.get(Entreprise.class, id);
+
+            // Delete the Entreprise
+            if (entreprise != null) {
+                session.delete(entreprise);
+            }
+
+            session.getTransaction().commit();
         } finally {
             factory.close();
         }
