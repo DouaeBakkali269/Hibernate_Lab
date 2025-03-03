@@ -17,6 +17,7 @@ public class Main {
 
         try {
             // Create a new Entreprise object
+            // Add a new entreprise
             Entreprise entreprise = new Entreprise();
             entreprise.setNomEnt("Tech Corp");
             entreprise.setListeActivities("Software Development");
@@ -31,6 +32,7 @@ public class Main {
             // Commit the transaction
             session.getTransaction().commit();
 
+            // we print the id of the added entreprise
             System.out.println("Entreprise saved with ID: " + entreprise.getIdEntreprise());
         } finally {
             factory.close();
