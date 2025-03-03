@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Entity
 @Table(name = "Entreprises")
+
+//for setters and getters
 @Data
 
 public class Entreprise {
