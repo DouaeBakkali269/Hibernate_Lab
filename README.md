@@ -10,7 +10,8 @@ This project is a hands-on lab to learn Hibernate, a popular Java framework for 
 2. **Exercise 2**: Retrieving an `Entreprise` by its ID.
 3. **Exercise 3**: Querying the database using HQL (Hibernate Query Language).
 4. **Exercise 4**: Updating and deleting data in the `Entreprises` table.
----
+
+
 
 ## Technologies Used
 
@@ -19,9 +20,10 @@ This project is a hands-on lab to learn Hibernate, a popular Java framework for 
 - **MySQL**: The relational database used to store data.
 - **Maven**: The build tool used to manage dependencies.
 
----
-## Project Structure
 
+
+## Project Structure
+```
 hibernate-lab/
 ├── src/
 │   ├── main/
@@ -36,8 +38,10 @@ hibernate-lab/
 │   └── test/                               # (Optional) Test classes
 ├── pom.xml                                 # Maven configuration file
 └── README.md                               # Project documentation
+```
 
----
+
+
 ## Features
 
 - **Insert Data:** `insertMultipleEntreprises()`
