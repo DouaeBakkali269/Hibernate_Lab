@@ -2,18 +2,6 @@
 
 This repository contains a Java project that demonstrates how to use **Hibernate** for managing database persistence with MySQL. The project includes examples of inserting, retrieving, updating, and deleting data from a database table.
 
-## Table of Contents
-1. [Project Overview](#project-overview)
-2. [Technologies Used](#technologies-used)
-3. [Setup Instructions](#setup-instructions)
-4. [Database Schema](#database-schema)
-5. [Running the Code](#running-the-code)
-6. [SQL Queries](#sql-queries)
-7. [Contributing](#contributing)
-8. [License](#license)
-
----
-
 ## Project Overview
 
 This project is a hands-on lab to learn Hibernate, a popular Java framework for Object-Relational Mapping (ORM). It includes the following exercises:
@@ -22,7 +10,6 @@ This project is a hands-on lab to learn Hibernate, a popular Java framework for 
 2. **Exercise 2**: Retrieving an `Entreprise` by its ID.
 3. **Exercise 3**: Querying the database using HQL (Hibernate Query Language).
 4. **Exercise 4**: Updating and deleting data in the `Entreprises` table.
-
 ---
 
 ## Technologies Used
@@ -33,18 +20,27 @@ This project is a hands-on lab to learn Hibernate, a popular Java framework for 
 - **Maven**: The build tool used to manage dependencies.
 
 ---
+## Project Structure
 
-## Setup Instructions
+hibernate-lab/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── example/
+│   │   │           ├── Main.java            # Main class to run Hibernate operations
+│   │   │           ├── Entreprise.java      # Entity class representing the Entreprises table
+│   │   │           └── HibernateUtil.java   # Utility class for managing SessionFactory
+│   │   └── resources/
+│   │       └── hibernate.cfg.xml           # Hibernate configuration file
+│   └── test/                               # (Optional) Test classes
+├── pom.xml                                 # Maven configuration file
+└── README.md                               # Project documentation
 
-### Prerequisites
+---
+## Features
 
-1. **Java Development Kit (JDK)**: Install JDK 8 or later.
-2. **MySQL**: Install MySQL and create a database named `hibernate_lab`.
-3. **IDE**: Use an IDE like IntelliJ IDEA or Eclipse.
-
-### Steps
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/DouaeBakkali269/Hibernate_Lab.git
-   cd Hibernate_Lab
+- **Insert Data:** `insertMultipleEntreprises()`
+- **Retrieve Data:** `getEntrepriseById(id)`
+- **Query with HQL:** `getAllEntreprisesSortedByEmployees()`
+- **Update & Delete:** `updateEntrepriseName(id, newName)`, `deleteEntreprise(id)`   
