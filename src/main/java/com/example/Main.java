@@ -2,64 +2,61 @@ package com.example;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+
 
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Create a SessionFactory
-        SessionFactory factory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Entreprise.class)
-                .buildSessionFactory();
+        // Get the SessionFactory from HibernateUtil
+        SessionFactory factory = HibernateUtil.getSessionFactory();
 
-//        // Insert multiple entreprises (Exercise 1)
-//        insertMultipleEntreprises(factory);
-//
-//        // Retrieve an Entreprise by ID (Exercise 2)
-//        Entreprise entreprise = getEntrepriseById(factory, 1);
-//        if (entreprise != null) {
-//            System.out.println("Retrieved Entreprise: " + entreprise.getNomEnt());
-//        } else {
-//            System.out.println("Entreprise not found.");
-//        }
+        // Insert multiple entreprises (Exercise 1)
+        insertMultipleEntreprises(factory);
 
-//        // Exo3
-//        // Retrieve all entreprises
-//        List<Entreprise> entreprises = getAllEntreprises();
-//        System.out.println("All Entreprises:");
-//        for (Entreprise e : entreprises) {
-//            System.out.println(e.getNomEnt());
-//        }
-//
-//        // Retrieve entreprises by name
-//        List<Entreprise> entreprisesByName = getEntrepriseByName("Tech Corp");
-//        System.out.println("Entreprises with name 'Tech Corp':");
-//        for (Entreprise e : entreprisesByName) {
-//            System.out.println(e.getNomEnt());
-//        }
-//
-//        // Retrieve all entreprises sorted by number of employees
-//        List<Entreprise> entreprisesSorted = getAllEntreprisesSortedByEmployees();
-//        System.out.println("Entreprises sorted by number of employees:");
-//        for (Entreprise e : entreprisesSorted) {
-//            System.out.println(e.getNomEnt() + " - " + e.getNbEmployee());
-//        }
-//
-//        // Count the number of entreprises
-//        long count = getEntrepriseCount();
-//        System.out.println("Number of entreprises: " + count);
-//
+        // Retrieve an Entreprise by ID (Exercise 2)
+        Entreprise entreprise = getEntrepriseById(factory, 1);
+        if (entreprise != null) {
+            System.out.println("Retrieved Entreprise: " + entreprise.getNomEnt());
+        } else {
+            System.out.println("Entreprise not found.");
+        }
 
+        // Exo3
+        // Retrieve all entreprises
+        List<Entreprise> entreprises = getAllEntreprises(factory);
+        System.out.println("All Entreprises:");
+        for (Entreprise e : entreprises) {
+            System.out.println(e.getNomEnt());
+        }
+
+        // Retrieve entreprises by name
+        List<Entreprise> entreprisesByName = getEntrepriseByName(factory, "Tech Corp");
+        System.out.println("Entreprises with name 'Tech Corp':");
+        for (Entreprise e : entreprisesByName) {
+            System.out.println(e.getNomEnt());
+        }
+
+        // Retrieve all entreprises sorted by number of employees
+        List<Entreprise> entreprisesSorted = getAllEntreprisesSortedByEmployees(factory);
+        System.out.println("Entreprises sorted by number of employees:");
+        for (Entreprise e : entreprisesSorted) {
+            System.out.println(e.getNomEnt() + " - " + e.getNbEmployee());
+        }
+
+        // Count the number of entreprises
+        long count = getEntrepriseCount(factory);
+        System.out.println("Number of entreprises: " + count);
+
+        // Exercise 4
         // Update an Entreprise's name
-        updateEntrepriseName(1, " Tech Corp 2");
+        updateEntrepriseName(factory, 1, "Tech Corp 2");
 
         // Delete an Entreprise
-        deleteEntreprise(2);
+        deleteEntreprise(factory, 2);
 
-        // Close the SessionFactory
-        factory.close();
+        // Close the SessionFactory (optional, but recommended)
+        HibernateUtil.shutdown();
     }
 
     // Method to insert multiple entreprises (Exercise 1)
@@ -89,6 +86,16 @@ public class Main {
             entreprise3.setNbEmployee(150);
             session.save(entreprise3);
 
+            Entreprise entreprise4 = new Entreprise();
+                entreprise4.setNomEnt("Green Energy");
+                entreprise4.setListeActivities("Renewable Energy");
+                entreprise4.setNbEmployee(50);
+
+            Entreprise entreprise5 = new Entreprise();
+                entreprise5.setNomEnt("Foodies");
+                entreprise5.setListeActivities("Food Production");
+                entreprise5.setNbEmployee(100);
+
             // Commit the transaction
             session.getTransaction().commit();
 
@@ -103,13 +110,8 @@ public class Main {
         Session session = factory.getCurrentSession();
 
         try {
-            // Start a transaction
             session.beginTransaction();
-
-            // Retrieve the Entreprise by ID
             Entreprise entreprise = session.get(Entreprise.class, id);
-
-            // Commit the transaction
             session.getTransaction().commit();
 
             return entreprise;
@@ -119,13 +121,8 @@ public class Main {
         }
     }
 
-    // get all rows from the table Entreprises
-    public static List<Entreprise> getAllEntreprises() {
-        SessionFactory factory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Entreprise.class)
-                .buildSessionFactory();
-
+    // Get all rows from the table Entreprises (Exercise 3)
+    public static List<Entreprise> getAllEntreprises(SessionFactory factory) {
         Session session = factory.getCurrentSession();
 
         try {
@@ -137,18 +134,14 @@ public class Main {
             session.getTransaction().commit();
 
             return entreprises;
-        } finally {
-            factory.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    // get rows by the entreprise name
-    public static List<Entreprise> getEntrepriseByName(String name) {
-        SessionFactory factory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Entreprise.class)
-                .buildSessionFactory();
-
+    // Get rows by the entreprise name (Exercise 3)
+    public static List<Entreprise> getEntrepriseByName(SessionFactory factory, String name) {
         Session session = factory.getCurrentSession();
 
         try {
@@ -161,18 +154,14 @@ public class Main {
 
             session.getTransaction().commit();
             return entreprises;
-        } finally {
-            factory.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    // get the rows by Employess number sorted
-    public static List<Entreprise> getAllEntreprisesSortedByEmployees() {
-        SessionFactory factory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Entreprise.class)
-                .buildSessionFactory();
-
+    // Get the rows by Employees number sorted (Exercise 3)
+    public static List<Entreprise> getAllEntreprisesSortedByEmployees(SessionFactory factory) {
         Session session = factory.getCurrentSession();
 
         try {
@@ -184,46 +173,35 @@ public class Main {
 
             session.getTransaction().commit();
             return entreprises;
-        } finally {
-            factory.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    // count the number of rowns in the entreprises table
-    public static long getEntrepriseCount() {
-        SessionFactory factory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Entreprise.class)
-                .buildSessionFactory();
-
+    // Count the number of rows in the entreprises table (Exercise 3)
+    public static long getEntrepriseCount(SessionFactory factory) {
         Session session = factory.getCurrentSession();
 
         try {
-            // Start a transaction
             session.beginTransaction();
 
             // Count the number of rows
             long count = (Long) session.createQuery("SELECT COUNT(*) FROM Entreprise")
                     .uniqueResult();
 
-            // Commit the transaction
             session.getTransaction().commit();
 
             return count;
-        } finally {
-            factory.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 
-    //Exercise 4
 
-    // update function
-    public static void updateEntrepriseName(int id, String newName) {
-        SessionFactory factory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Entreprise.class)
-                .buildSessionFactory();
-
+    // Update function (Exercise 4)
+    public static void updateEntrepriseName(SessionFactory factory, int id, String newName) {
         Session session = factory.getCurrentSession();
 
         try {
@@ -239,18 +217,13 @@ public class Main {
             }
 
             session.getTransaction().commit();
-        } finally {
-            factory.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    // delete by id
-    public static void deleteEntreprise(int id) {
-        SessionFactory factory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Entreprise.class)
-                .buildSessionFactory();
-
+    // Delete by ID (Exercise 4)
+    public static void deleteEntreprise(SessionFactory factory, int id) {
         Session session = factory.getCurrentSession();
 
         try {
@@ -265,8 +238,8 @@ public class Main {
             }
 
             session.getTransaction().commit();
-        } finally {
-            factory.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
